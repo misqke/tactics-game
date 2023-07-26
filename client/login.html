@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div id="auth-form">
+        <h1>Game</h1>
+        <h3 id="title">Login</h3>
+        <div class="form-control">
+          <label for="username">Username</label>
+          <input id="username" type="text" />
+        </div>
+        <div class="form-control">
+          <label for="password">Password</label>
+          <input id="password" type="password" />
+        </div>
+        <div class="form-control">
+          <button class="menu-button hidden" id="signup-button">Signup</button>
+          <button class="menu-button" id="login-button">Login</button>
+        </div>
+        <div class="form-control">
+          <p class="link-text" id="switch-to-signup">
+            Need an account? Signup.
+          </p>
+          <p class="link-text hidden" id="switch-to-login">
+            Already have an account? Login.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="./js/login.js" type="module"></script>
+</html>

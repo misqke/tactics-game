@@ -5,22 +5,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="./css/global.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/main.css" />
   </head>
   <body>
     <div class="container" id="main-menu">
       <div class="main-menu-grid">
         <div class="main-menu-column info">
-          <div>
+          <div class="column">
             <h1>Game</h1>
             <p>Welcome, <span id="username"></span></p>
           </div>
-          <div>
-            <h4>Create Game</h4>
-            <input id="new-game-name-input" />
+          <div class="text-row">
+            <input
+              id="new-game-name-input"
+              type="text"
+              placeholder="New Game"
+            />
             <button class="menu-button" type="button" id="new-game-button">
               Create
             </button>
+          </div>
+
+          <div class="column grow">
+            <div id="main-menu-message-container"></div>
+            <div class="text-row">
+              <input id="main-menu-message-input" type="text" />
+              <button
+                type="search"
+                class="menu-button"
+                id="main-menu-message-button"
+              >
+                Send
+              </button>
+            </div>
           </div>
         </div>
         <div class="main-menu-column">
@@ -32,6 +50,6 @@
     <div class="container hidden" id="game-menu"></div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./js/main.js" type="module"></script>
+    <script src="../js/main.js" type="module"></script>
   </body>
 </html>

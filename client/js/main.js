@@ -1,5 +1,8 @@
 import el from "./elements.js";
 import state from "./state.js";
+import { loginFromStorage } from "./storage.js";
+
+loginFromStorage();
 
 const socket = io();
 
@@ -14,8 +17,29 @@ socket.on("lobbiesUpdate", (lobbies) => {
   el.generateLobbies(state.lobbies);
 });
 
+socket.on("newMainMenuMsg", (data) => {
+  el.generateMessage(data);
+});
+
+const inputs = document.querySelectorAll("input[type=text]");
+for (let i = 0; i < inputs.length; i++) {
+  inputs[i].addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      inputs[i].nextElementSibling.click();
+    }
+  });
+}
+
 el.newGameButton.onclick = () => {
-  console.log("clicked");
   const gameName = el.newGameInput.value;
   socket.emit("createGame", { user: state.user, gameName });
+};
+
+el.mainMenuMsgButton.onclick = () => {
+  const msg = el.mainMenuMsgInput.value;
+  if (msg.length > 0) {
+    socket.emit("createMainMenuMsg", { user: state.user, msg });
+    el.mainMenuMsgInput.value = "";
+  }
 };

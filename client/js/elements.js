@@ -6,6 +6,9 @@ const el = {
   newGameInput: document.getElementById("new-game-name-input"),
   newGameButton: document.getElementById("new-game-button"),
   lobbyContainer: document.getElementById("main-menu-lobby-grid"),
+  mainMenuMsgContainer: document.getElementById("main-menu-message-container"),
+  mainMenuMsgInput: document.getElementById("main-menu-message-input"),
+  mainMenuMsgButton: document.getElementById("main-menu-message-button"),
   generateLobbies(lobbies) {
     this.lobbyContainer.innerHTML = "";
     lobbies.forEach((l) => {
@@ -18,6 +21,12 @@ const el = {
       container.append(name, creator);
       this.lobbyContainer.append(container);
     });
+  },
+  generateMessage(data) {
+    const msg = document.createElement("p");
+    msg.classList.add("msg");
+    msg.innerHTML = `<strong>${data.user.name}:</strong> ${data.msg}`;
+    this.mainMenuMsgContainer.append(msg);
   },
 };
 

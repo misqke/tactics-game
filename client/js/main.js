@@ -1,25 +1,25 @@
-import el from "./elements.js";
-import state from "./state.js";
+import { Menu } from "./menu.js";
+import { Lobby } from "./lobby.js";
 import { loginFromStorage } from "./storage.js";
 
-loginFromStorage();
+const mainMenuContainer = document.getElementById("main-menu");
+const lobbyContainer = document.getElementById("lobby-menu");
+const gameContainer = document.getElementById("game-menu");
+
+const user = await loginFromStorage();
+let game = {};
 
 const socket = io();
 
-socket.on("login", (data) => {
-  state.user = data.user;
-  el.username.innerText = data.user.name;
+socket.emit("login", user.username);
+
+socket.on("successfulLogin", (data) => {
+  console.log(data);
+  Menu.el.username.innerText = user.username;
+  Menu.generateLobbies(data.lobbies);
 });
 
-socket.on("lobbiesUpdate", (lobbies) => {
-  console.log(lobbies);
-  state.lobbies = lobbies;
-  el.generateLobbies(state.lobbies);
-});
-
-socket.on("newMainMenuMsg", (data) => {
-  el.generateMessage(data);
-});
+Menu.init(socket, user.username);
 
 const inputs = document.querySelectorAll("input[type=text]");
 for (let i = 0; i < inputs.length; i++) {
@@ -31,15 +31,8 @@ for (let i = 0; i < inputs.length; i++) {
   });
 }
 
-el.newGameButton.onclick = () => {
-  const gameName = el.newGameInput.value;
-  socket.emit("createGame", { user: state.user, gameName });
-};
-
-el.mainMenuMsgButton.onclick = () => {
-  const msg = el.mainMenuMsgInput.value;
-  if (msg.length > 0) {
-    socket.emit("createMainMenuMsg", { user: state.user, msg });
-    el.mainMenuMsgInput.value = "";
-  }
-};
+socket.on("successfulJoinGame", (joinedGame) => {
+  game = joinedGame;
+  mainMenuContainer.classList.add("hidden");
+  lobbyContainer.classList.remove("hidden");
+});

@@ -26,21 +26,40 @@ app.use("/auth", authRouter);
 
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
-  const newUser = state.addUser(socket.id);
-  socket.emit("login", { user: newUser });
-  socket.join("mainLobby");
 
-  socket.on("disconnect", (reason) => {
-    state.removeUser(socket.id);
+  socket.on("login", (username) => {
+    socket.data.username = username;
+    socket.emit("successfulLogin", {
+      lobbies: state.games.filter((g) => g.started === false),
+    });
+    socket.join("mainLobby");
   });
 
-  socket.on("createGame", (data) => {
-    const newLobby = state.addLobby(data);
-    io.to("mainLobby").emit("lobbiesUpdate", state.lobbies);
+  socket.on("disconnect", (reason) => {});
+
+  socket.on("createGame", (gameName) => {
+    const newGame = state.addGame({
+      player1: socket.data.username,
+      gameName,
+    });
+    if (newGame.error === true) {
+      socket.emit("failedCreateGame", newGame);
+    } else {
+      socket.emit("successfulJoinGame", newGame);
+      socket.leave("mainLobby");
+      socket.join(newGame.gameName);
+      io.to("mainLobby").emit(
+        "lobbiesUpdate",
+        state.games.filter((g) => g.started === false)
+      );
+    }
   });
 
-  socket.on("createMainMenuMsg", (data) => {
-    io.to("mainLobby").emit("newMainMenuMsg", data);
+  socket.on("createMainMenuMsg", (msg) => {
+    io.to("mainLobby").emit("newMainMenuMsg", {
+      username: socket.data.username,
+      msg,
+    });
   });
 });
 

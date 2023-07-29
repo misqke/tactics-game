@@ -86,7 +86,34 @@ input {
   display: grid;
   width: 100%;
   height: 100%;
-  grid-auto-rows: 200px;
+  grid-auto-rows: auto;
   border-radius: 8px;
   background: #0007;
+}
+
+.single-lobby-container {
+  padding: 4px;
+  background: #000;
+  border-bottom: 1px solid #676767;
+  height: fit-content;
+  transition-duration: 150ms;
+  cursor: pointer;
+}
+
+.single-lobby-container:hover {
+  background: #379;
+}
+
+.single-lobby-container p {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.single-lobby-container i {
+  float: right;
+  font-size: 0.9rem;
+}
+
+.myMsg {
+  color: #6ce;
 }

@@ -18,11 +18,11 @@
           </div>
           <div class="text-row">
             <input
-              id="new-game-name-input"
+              id="new-lobby-name-input"
               type="text"
               placeholder="New Game"
             />
-            <button class="menu-button" type="button" id="new-game-button">
+            <button class="menu-button" type="button" id="new-lobby-button">
               Create
             </button>
           </div>
@@ -46,7 +46,9 @@
         </div>
       </div>
     </div>
-    <div class="container hidden" id="lobby-menu"></div>
+    <div class="container hidden" id="lobby-menu">
+      <div>game lobby menu</div>
+    </div>
     <div class="container hidden" id="game-menu"></div>
 
     <script src="/socket.io/socket.io.js"></script>

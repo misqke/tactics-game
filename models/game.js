@@ -1,8 +1,9 @@
 class Game {
-  constructor(host, name) {
-    this.host = host;
-    this.name = name;
-    this.opponent = null;
+  constructor(data) {
+    this.gameName = data.gameName;
+    this.started = false;
+    this.player1 = data.player1;
+    this.player2 = null;
   }
 }
 

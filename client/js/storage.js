@@ -10,7 +10,7 @@ export const loginFromStorage = async () => {
       localStorage.clear();
       window.location.href = "/login.html";
     } else {
-      return data;
+      return res.user;
     }
   }
 };

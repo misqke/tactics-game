@@ -38,19 +38,41 @@ io.on("connection", (socket) => {
 
   socket.on("disconnecting", (reason) => {
     if (socket.data.lobby !== "mainLobby") {
-      res = state.leaveGame(socket.data.lobby, socket.data.username);
-      if (res.deleted === true) {
-        io.to(socket.data.lobby).emit("deletedLobby", {
-          lobbies: state.getLobbies(),
-        });
-        // io.to("mainLobby").emit("lobbiesUpdate", state.getLobbies());
-      } else {
-        io.to(socket.data.lobby).emit("updateGameLobby", res.game);
+      const game = state.getGame(socket.data.lobby);
+      if (game.started === false) {
+        res = state.leaveGameLobby(socket.data.lobby, socket.data.username);
+        if (res.deleted === true) {
+          io.to(socket.data.lobby).emit("deletedLobby", {
+            lobbies: state.getLobbies(),
+          });
+        } else {
+          io.to(socket.data.lobby).emit("updateGameLobby", res.game);
+        }
       }
     }
   });
 
   socket.on("disconnect", (reason) => {});
+
+  socket.on("rejoinGame", (data) => {
+    socket.data.username = data.username;
+    const res = state.getGame(data.gameName);
+    if (res.error === true) {
+      socket.emit("failedRejoinGame", res.msg);
+    } else {
+      if (
+        res.game.player1.username === data.username ||
+        res.game.player2.username === data.username
+      ) {
+        socket.emit("successfulRejoinGame", res.game);
+        socket.leave("mainLobby");
+        socket.join(res.game.gameName);
+        socket.data.lobby = res.game.gameName;
+      } else {
+        socket.emit("failedRejoinGame", "You can't join this game");
+      }
+    }
+  });
 
   /** main menu */
   socket.on("joinMainLobby", (currentLobby) => {

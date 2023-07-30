@@ -10,7 +10,7 @@
   </head>
   <body>
     <!-- MAIN MENU -->
-    <div class="container" id="main-menu">
+    <div class="container hidden" id="main-menu">
       <div class="main-menu-grid">
         <div class="main-menu-column info">
           <div class="column">
@@ -117,6 +117,11 @@
     <!-- GAME -->
     <div class="container hidden" id="game-menu">GAME ON</div>
 
+    <!-- LOADING MODAL -->
+    <dialog id="loading-modal">
+      <h1>GAME</h1>
+      <p>loading...</p>
+    </dialog>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../js/main.js" type="module"></script>
   </body>

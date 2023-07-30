@@ -7,10 +7,11 @@ export const loginFromStorage = async () => {
   } else {
     const res = await login({ username, password });
     if (res.error === true) {
-      localStorage.clear();
+      localStorage.removeItem("username");
+      localStorage.removeItem("password");
       window.location.href = "/login.html";
     } else {
-      return res.user;
+      return res.user.username;
     }
   }
 };
@@ -25,4 +26,9 @@ export const login = async (creds) => {
   });
   const data = await res.json();
   return data;
+};
+
+export const checkGame = () => {
+  const gameName = sessionStorage.getItem("gameName");
+  return gameName === null ? false : gameName;
 };

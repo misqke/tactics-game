@@ -1,3 +1,19 @@
+#loading-modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  color: #fff;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+#loading-modal::backdrop {
+  background: #0006;
+  backdrop-filter: blur(3px);
+}
+
 .main-menu-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

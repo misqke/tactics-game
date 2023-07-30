@@ -2,6 +2,18 @@ const Game = require("./models/game.js");
 
 const state = {
   games: [],
+  getLobbies() {
+    const lobbies = this.games.filter((g) => g.started === false);
+    return lobbies;
+  },
+  getGame(gameName) {
+    const game = this.games.find((g) => g.gameName === gameName);
+    if (game === undefined) {
+      return { error: true, msg: "Game not found" };
+    } else {
+      return { error: false, game };
+    }
+  },
   addGame(data) {
     const exists = this.games.findIndex((g) => g.gameName === data.gameName);
     if (exists !== -1) {
@@ -29,11 +41,7 @@ const state = {
       return { error: false, game: this.games[index] };
     }
   },
-  getLobbies() {
-    const lobbies = this.games.filter((g) => g.started === false);
-    return lobbies;
-  },
-  leaveGame(gameName, username) {
+  leaveGameLobby(gameName, username) {
     const index = this.games.findIndex((g) => g.gameName === gameName);
     if (this.games[index].player1.username === username) {
       this.games.splice(index, 1);

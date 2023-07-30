@@ -17,17 +17,41 @@ const state = {
     this.games.splice(index, 1);
   },
   joinGame(gameName, username) {
-    const game = this.games.find((g) => g.gameName === gameName);
-    if (game === undefined) {
+    const index = this.games.findIndex((g) => g.gameName === gameName);
+    if (index === -1) {
       return { error: true, msg: "This game no longer exists." };
-    } else if (game.stated === true) {
+    } else if (this.games[index].stated === true) {
       return { error: true, msg: "This game has already started." };
-    } else if (game.player2 !== null) {
+    } else if (this.games[index].player2 !== null) {
       return { error: true, msg: "This game is full." };
     } else {
-      game.player2 = { username };
-      return { error: false, game };
+      this.games[index].player2 = { username, team: "Human" };
+      return { error: false, game: this.games[index] };
     }
+  },
+  getLobbies() {
+    const lobbies = this.games.filter((g) => g.started === false);
+    return lobbies;
+  },
+  leaveGame(gameName, username) {
+    const index = this.games.findIndex((g) => g.gameName === gameName);
+    if (this.games[index].player1.username === username) {
+      this.games.splice(index, 1);
+      return { deleted: true };
+    } else {
+      this.games[index].player2 = null;
+      return { deleted: false, game: this.games[index] };
+    }
+  },
+  updateGameLobby(game) {
+    const index = this.games.findIndex((g) => (g.gameName = game.gameName));
+    this.games[index] = game;
+    return game;
+  },
+  startGame(game) {
+    const index = this.games.findIndex((g) => (g.gameName = game.gameName));
+    this.games[index].started = true;
+    return this.games[index];
   },
 };
 

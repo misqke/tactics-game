@@ -29,7 +29,10 @@
           </div>
 
           <div class="column grow">
-            <div id="main-menu-message-container"></div>
+            <div
+              id="main-menu-message-container"
+              class="message-container"
+            ></div>
             <div class="text-row">
               <input id="main-menu-message-input" type="text" />
               <button
@@ -73,9 +76,26 @@
                 </select>
               </div>
             </div>
-            <div></div>
+            <div class="column grow">
+              <div id="lobby-message-container" class="message-container"></div>
+              <div class="text-row">
+                <input id="lobby-message-input" type="text" />
+                <button
+                  type="search"
+                  class="menu-button"
+                  id="lobby-message-button"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="lobby-body-column"></div>
+          <div class="lobby-body-column">
+            <img src="./images/standard-grid.jpg" id="map-image" />
+            <select id="map-select">
+              <option value="Map 1">Map 1</option>
+            </select>
+          </div>
         </div>
         <hr />
         <div class="lobby-row">
@@ -95,7 +115,7 @@
     </div>
 
     <!-- GAME -->
-    <div class="container hidden" id="game-menu"></div>
+    <div class="container hidden" id="game-menu">GAME ON</div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="../js/main.js" type="module"></script>

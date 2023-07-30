@@ -13,40 +13,44 @@ export const Menu = {
   state: {
     username: "",
     socket: null,
+    initiated: false,
   },
   init(socket, username) {
     this.state.username = username;
-    this.socket = socket;
-    socket.on("lobbiesUpdate", (lobbies) => {
-      this.generateLobbies(lobbies);
-    });
+    if (this.state.initiated === false) {
+      this.socket = socket;
+      socket.on("lobbiesUpdate", (lobbies) => {
+        this.generateLobbies(lobbies);
+      });
 
-    socket.on("newMainMenuMsg", (data) => {
-      this.generateMessage(data);
-    });
+      socket.on("newMainMenuMsg", (data) => {
+        this.generateMessage(data);
+      });
 
-    socket.on("failedCreateGame", (data) => {
-      alert(data.msg);
-    });
+      socket.on("failedCreateGame", (data) => {
+        alert(data.msg);
+      });
 
-    socket.on("failedJoinGame", (data) => {
-      alert(data.msg);
-      this.generateLobbies(data.lobbies);
-    });
+      socket.on("failedJoinGame", (data) => {
+        alert(data.msg);
+        this.generateLobbies(data.lobbies);
+      });
 
-    this.el.newGameButton.onclick = () => {
-      const lobbyName = this.el.newGameInput.value;
-      socket.emit("createGame", lobbyName);
-      this.el.newGameInput.value = "";
-    };
+      this.el.newGameButton.onclick = () => {
+        const lobbyName = this.el.newGameInput.value;
+        socket.emit("createGame", lobbyName);
+        this.el.newGameInput.value = "";
+      };
 
-    this.el.mainMenuMsgButton.onclick = () => {
-      const msg = this.el.mainMenuMsgInput.value;
-      if (msg.length > 0) {
-        socket.emit("createMainMenuMsg", msg);
-        this.el.mainMenuMsgInput.value = "";
-      }
-    };
+      this.el.mainMenuMsgButton.onclick = () => {
+        const msg = this.el.mainMenuMsgInput.value;
+        if (msg.length > 0) {
+          socket.emit("createMainMenuMsg", msg);
+          this.el.mainMenuMsgInput.value = "";
+        }
+      };
+      this.initiated = true;
+    }
   },
   generateLobbies(lobbies) {
     this.el.lobbyContainer.innerHTML = "";

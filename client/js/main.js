@@ -11,16 +11,6 @@ let game = {};
 
 const socket = io();
 
-socket.emit("login", user.username);
-
-socket.on("successfulLogin", (data) => {
-  console.log(data);
-  Menu.el.username.innerText = user.username;
-  Menu.generateLobbies(data.lobbies);
-});
-
-Menu.init(socket, user.username);
-
 const inputs = document.querySelectorAll("input[type=text]");
 for (let i = 0; i < inputs.length; i++) {
   inputs[i].addEventListener("keypress", (e) => {
@@ -31,10 +21,41 @@ for (let i = 0; i < inputs.length; i++) {
   });
 }
 
+Menu.init(socket, user.username);
+
+socket.emit("login", user.username);
+
+socket.on("successfulLogin", (data) => {
+  Menu.el.username.innerText = user.username;
+  Menu.generateLobbies(data.lobbies);
+});
+
 socket.on("successfulJoinGame", (joinedGame) => {
-  console.log(joinedGame);
   game = joinedGame;
-  Lobby.init(socket, username, joinedGame);
+  Lobby.init(socket, user.username, joinedGame);
   mainMenuContainer.classList.add("hidden");
   lobbyContainer.classList.remove("hidden");
+});
+
+socket.on("deletedLobby", (lobbies) => {
+  console.log(lobbies);
+  alert("The host has left the game.");
+  lobbyContainer.classList.add("hidden");
+  mainMenuContainer.classList.remove("hidden");
+  socket.emit("joinMainLobby", game.gameName);
+  Menu.generateLobbies(lobbies);
+  game = {};
+});
+
+Lobby.el.backBtn.onclick = () => {
+  lobbyContainer.classList.add("hidden");
+  mainMenuContainer.classList.remove("hidden");
+  socket.emit("leaveLobby", game.gameName);
+  game = {};
+};
+
+socket.on("gameStarted", (startedGame) => {
+  game = startedGame;
+  lobbyContainer.classList.add("hidden");
+  gameContainer.classList.remove("hidden");
 });

@@ -26,32 +26,59 @@ app.use("/auth", authRouter);
 
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
+  socket.join("mainLobby");
+  socket.data.lobby = "mainLobby";
 
   socket.on("login", (username) => {
     socket.data.username = username;
     socket.emit("successfulLogin", {
-      lobbies: state.games.filter((g) => g.started === false),
+      lobbies: state.getLobbies(),
     });
-    socket.join("mainLobby");
+  });
+
+  socket.on("disconnecting", (reason) => {
+    if (socket.data.lobby !== "mainLobby") {
+      res = state.leaveGame(socket.data.lobby, socket.data.username);
+      if (res.deleted === true) {
+        io.to(socket.data.lobby).emit("deletedLobby", {
+          lobbies: state.getLobbies(),
+        });
+        // io.to("mainLobby").emit("lobbiesUpdate", state.getLobbies());
+      } else {
+        io.to(socket.data.lobby).emit("updateGameLobby", res.game);
+      }
+    }
   });
 
   socket.on("disconnect", (reason) => {});
 
+  /** main menu */
+  socket.on("joinMainLobby", (currentLobby) => {
+    socket.leave(currentLobby);
+    socket.join("mainLobby");
+    socket.data.lobby = "mainLobby";
+  });
+
+  socket.on("createMainMenuMsg", (msg) => {
+    io.to("mainLobby").emit("newMainMenuMsg", {
+      username: socket.data.username,
+      msg,
+    });
+  });
+
   socket.on("createGame", (gameName) => {
-    const newGame = state.addGame({
+    const res = state.addGame({
       player1: socket.data.username,
       gameName,
     });
-    if (newGame.error === true) {
-      socket.emit("failedCreateGame", newGame);
+    if (res.error === true) {
+      socket.emit("failedCreateGame", res);
     } else {
-      socket.emit("successfulJoinGame", newGame.game);
+      socket.emit("successfulJoinGame", res.game);
       socket.leave("mainLobby");
-      socket.join(newGame.gameName);
-      io.to("mainLobby").emit(
-        "lobbiesUpdate",
-        state.games.filter((g) => g.started === false)
-      );
+      socket.join(res.game.gameName);
+      socket.data.lobby = res.game.gameName;
+      io.to("mainLobby").emit("lobbiesUpdate", state.getLobbies());
     }
   });
 
@@ -60,19 +87,49 @@ io.on("connection", (socket) => {
     if (res.error === true) {
       socket.emit("failedJoinGame", {
         msg: res.msg,
-        lobbies: state.games.filter((g) => g.started === false),
+        lobbies: state.getLobbies(),
       });
     } else {
       socket.emit("successfulJoinGame", res.game);
-      io.to(res.game.name).emit("updateGameLobby", res.game);
+      io.to(res.game.gameName).emit("updateGameLobby", res.game);
+      socket.leave("mainLobby");
+      socket.join(res.game.gameName);
+      socket.data.lobby = res.game.gameName;
     }
   });
 
-  socket.on("createMainMenuMsg", (msg) => {
-    io.to("mainLobby").emit("newMainMenuMsg", {
+  /** Lobby */
+  socket.on("createLobbyMsg", (data) => {
+    io.to(data.gameName).emit("newLobbyMsg", {
       username: socket.data.username,
-      msg,
+      msg: data.msg,
     });
+  });
+
+  socket.on("leaveLobby", (gameName) => {
+    const username = socket.data.username;
+    const res = state.leaveGame(gameName, username);
+    if (res.deleted === true) {
+      socket.leave(gameName);
+      socket.join("mainLobby");
+      socket.data.lobby = "mainLobby";
+      io.to(gameName).emit("deletedLobby", state.getLobbies());
+    } else {
+      socket.leave(gameName);
+      socket.join("mainLobby");
+      socket.data.lobby = "mainLobby";
+      io.to(gameName).emit("updateGameLobby", res.game);
+    }
+  });
+
+  socket.on("updateGameLobbyInfo", (game) => {
+    const updated = state.updateGameLobby(game);
+    socket.broadcast.to(socket.data.lobby).emit("updateGameLobby", updated);
+  });
+
+  socket.on("startGame", (game) => {
+    const updatedGame = state.startGame(game);
+    io.to(socket.data.lobby).emit("gameStarted", updatedGame);
   });
 });
 

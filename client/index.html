@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/main.css" />
   </head>
   <body>
+    <!-- MAIN MENU -->
     <div class="container" id="main-menu">
       <div class="main-menu-grid">
         <div class="main-menu-column info">
@@ -46,9 +47,54 @@
         </div>
       </div>
     </div>
+
+    <!-- GAME LOBBY -->
     <div class="container hidden" id="lobby-menu">
-      <div>game lobby menu</div>
+      <div class="lobby-menu-grid">
+        <div class="lobby-row">
+          <h1 id="game-name"></h1>
+        </div>
+        <hr />
+        <div class="lobby-body">
+          <div class="lobby-body-column first">
+            <div>
+              <div class="player-row">
+                <span id="player-1-name"></span>
+                <select id="player-1-select">
+                  <option>Human</option>
+                  <option>Dwarf</option>
+                </select>
+              </div>
+              <div class="player-row">
+                <span id="player-2-name"></span>
+                <select id="player-2-select">
+                  <option>Human</option>
+                  <option>Dwarf</option>
+                </select>
+              </div>
+            </div>
+            <div></div>
+          </div>
+          <div class="lobby-body-column"></div>
+        </div>
+        <hr />
+        <div class="lobby-row">
+          <button class="menu-button large" type="button" id="back-button">
+            Back
+          </button>
+          <button
+            class="menu-button large"
+            type="button"
+            id="start-button"
+            disabled="true"
+          >
+            Start
+          </button>
+        </div>
+      </div>
     </div>
+
+    <!-- GAME -->
     <div class="container hidden" id="game-menu"></div>
 
     <script src="/socket.io/socket.io.js"></script>

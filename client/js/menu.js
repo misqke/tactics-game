@@ -11,10 +11,12 @@ export const Menu = {
     mainMenuMsgButton: document.getElementById("main-menu-message-button"),
   },
   state: {
-    username: {},
+    username: "",
+    socket: null,
   },
   init(socket, username) {
     this.state.username = username;
+    this.socket = socket;
     socket.on("lobbiesUpdate", (lobbies) => {
       this.generateLobbies(lobbies);
     });
@@ -25,6 +27,11 @@ export const Menu = {
 
     socket.on("failedCreateGame", (data) => {
       alert(data.msg);
+    });
+
+    socket.on("failedJoinGame", (data) => {
+      alert(data.msg);
+      this.generateLobbies(data.lobbies);
     });
 
     this.el.newGameButton.onclick = () => {
@@ -49,8 +56,11 @@ export const Menu = {
       const name = document.createElement("p");
       name.innerText = l.gameName;
       const creator = document.createElement("i");
-      creator.innerText = l.player1;
+      creator.innerText = l.player1.username;
       container.append(name, creator);
+      container.onclick = () => {
+        this.socket.emit("joinGame", l.gameName);
+      };
       this.el.lobbyContainer.append(container);
     });
   },

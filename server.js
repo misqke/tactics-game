@@ -45,13 +45,26 @@ io.on("connection", (socket) => {
     if (newGame.error === true) {
       socket.emit("failedCreateGame", newGame);
     } else {
-      socket.emit("successfulJoinGame", newGame);
+      socket.emit("successfulJoinGame", newGame.game);
       socket.leave("mainLobby");
       socket.join(newGame.gameName);
       io.to("mainLobby").emit(
         "lobbiesUpdate",
         state.games.filter((g) => g.started === false)
       );
+    }
+  });
+
+  socket.on("joinGame", (gameName) => {
+    const res = state.joinGame(gameName, socket.data.username);
+    if (res.error === true) {
+      socket.emit("failedJoinGame", {
+        msg: res.msg,
+        lobbies: state.games.filter((g) => g.started === false),
+      });
+    } else {
+      socket.emit("successfulJoinGame", res.game);
+      io.to(res.game.name).emit("updateGameLobby", res.game);
     }
   });
 

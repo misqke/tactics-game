@@ -32,7 +32,9 @@ for (let i = 0; i < inputs.length; i++) {
 }
 
 socket.on("successfulJoinGame", (joinedGame) => {
+  console.log(joinedGame);
   game = joinedGame;
+  Lobby.init(socket, username, joinedGame);
   mainMenuContainer.classList.add("hidden");
   lobbyContainer.classList.remove("hidden");
 });

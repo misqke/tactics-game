@@ -80,10 +80,12 @@ export const Lobby = {
       this.el.startBtn.classList.remove("hidden");
       this.el.player2Select.disabled = true;
       this.el.player1Select.disabled = false;
+      this.el.mapSelect.disabled = false;
     } else {
       this.el.startBtn.classList.add("hidden");
       this.el.player2Select.disabled = false;
       this.el.player1Select.disabled = true;
+      this.el.mapSelect.disabled = true;
     }
   },
   generateMessage(data) {

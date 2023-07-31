@@ -24,6 +24,17 @@ toLogin.onclick = () => {
   title.innerText = "Login";
 };
 
+passwordEl.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    if (signupBtn.classList.contains("hidden")) {
+      loginBtn.click();
+    } else {
+      signupBtn.click();
+    }
+  }
+});
+
 signupBtn.onclick = async () => {
   const username = usernameEl.value;
   const password = passwordEl.value;

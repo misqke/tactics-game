@@ -61,7 +61,9 @@ export const Menu = {
       name.innerText = l.gameName;
       const creator = document.createElement("i");
       creator.innerText = l.player1.username;
-      container.append(name, creator);
+      const status = document.createElement("span");
+      status.innerText = `${l.player2 === null ? 1 : 2}/2`;
+      container.append(name, creator, status);
       container.onclick = () => {
         this.socket.emit("joinGame", l.gameName);
       };

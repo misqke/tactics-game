@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
   socket.on("disconnecting", (reason) => {
     if (socket.data.lobby !== "mainLobby") {
       const game = state.getGame(socket.data.lobby);
-      if (game.started === false) {
+      if (game.game.started === false) {
         res = state.leaveGameLobby(socket.data.lobby, socket.data.username);
         if (res.deleted === true) {
           io.to(socket.data.lobby).emit("deletedLobby", {

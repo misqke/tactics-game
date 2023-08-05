@@ -1,5 +1,6 @@
 import { Menu } from "./menu.js";
 import { Lobby } from "./lobby.js";
+import { Game } from "./game.js";
 import { loginFromStorage, checkGame } from "./storage.js";
 
 const mainMenuContainer = document.getElementById("main-menu");
@@ -41,6 +42,7 @@ socket.on("successfulRejoinGame", (rejoinedGame) => {
   game = rejoinedGame;
   loadingModal.close();
   gameContainer.classList.remove("hidden");
+  Game.init(username, rejoinedGame);
 });
 
 socket.on("successfulLogin", (data) => {
@@ -80,4 +82,5 @@ socket.on("gameStarted", (startedGame) => {
   sessionStorage.setItem("gameName", startedGame.gameName);
   lobbyContainer.classList.add("hidden");
   gameContainer.classList.remove("hidden");
+  Game.init(username, startedGame);
 });

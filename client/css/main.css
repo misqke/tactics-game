@@ -267,7 +267,7 @@ input {
   box-sizing: border-box;
   justify-self: center;
   align-self: center;
-  border: 1px solid #878787;
+  border: 5px solid #878787;
 }
 
 .control-bar {

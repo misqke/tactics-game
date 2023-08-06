@@ -64,7 +64,7 @@ export const Lobby = {
     }
   },
   setElements() {
-    this.el.mapSelect.value = this.state.game.map;
+    this.el.mapSelect.value = this.state.game.map.name;
     this.el.gameName.innerText = this.state.game.gameName;
     this.el.player1Name.innerText = this.state.game.player1.username;
     this.el.player1Select.value = this.state.game.player1.team;

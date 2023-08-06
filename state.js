@@ -1,4 +1,6 @@
 const Game = require("./models/game.js");
+const map1 = require("./data/maps/map1.js");
+const fighter = require("./data/units/fighter.js");
 
 const state = {
   games: [],
@@ -59,6 +61,8 @@ const state = {
   startGame(game) {
     const index = this.games.findIndex((g) => (g.gameName = game.gameName));
     this.games[index].started = true;
+    this.games[index].map = map1;
+    this.games[index].getUnits(fighter, fighter);
     return this.games[index];
   },
 };
